@@ -45,7 +45,7 @@ struct ContentView: View {
             Text("Arrivals")
         }
         NavigationLink(destination: FlightBoard(flightData: self.flightInfo
-          .filter { $0.direction == .arrival }, boardName: "Departures")) {
+          .filter { $0.direction == .departure }, boardName: "Departures")) {
                    Text("Departures")
         }
         Spacer()

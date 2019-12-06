@@ -28,9 +28,20 @@
 
 import SwiftUI
 
+struct  ChekInInfo : Identifiable {
+    let id = UUID()
+    let airline : String
+    let flight : String
+    
+}
+
 struct FlightBoardInformation: View {
+    
     var flight : FlightInformation
     @Binding var showModel : Bool
+    @State var rebookAlert : Bool = false
+    @State private var checkInFlight : ChekInInfo?
+    
     var body: some View {
         VStack(alignment : .leading) {
             HStack {
@@ -44,6 +55,45 @@ struct FlightBoardInformation: View {
                 Text(flight.flightStatus)
                     .foregroundColor(Color(flight.timelineColor))
                 Spacer()
+            
+            if(flight.status == .cancelled) {
+                
+                Button("Rebook Flight" , action: {
+                    self.rebookAlert = true
+                })
+                    
+                    .alert(isPresented: $rebookAlert) {
+                        Alert(title: Text("Contact your airlines") ,
+                              message: Text("We cannot rebook this flight. Please contact the airline to reschedule this flight." ))
+                }
+                
+            }
+            
+            if flight.direction == .departure && (flight.status == .ontime || flight.status == .delayed) {
+               Button("Check in for flight" , action: {
+                        self.checkInFlight = ChekInInfo(airline: self.flight.airline, flight: self.flight.number)
+                })
+                .actionSheet(item: $checkInFlight) {
+                    flight in
+                    ActionSheet(title: Text("Check In"), message: Text("Check in for \(flight.airline) Flight \(flight.flight)"),
+                        buttons:  [
+                        
+                            .cancel(Text("Not Now")),
+                            .destructive(Text("Reschedule"), action:  {
+                                print("Reschudeling flght")
+                            }),
+                            .destructive(Text("Check In"), action: {
+                                print("Check-in for \(flight.airline) \(flight.flight).")
+                            })
+                            
+                        
+                        
+                        ])
+                }
+                              
+                
+            }
+            
             }
             .font(.headline).padding(10)
         
