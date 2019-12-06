@@ -41,12 +41,18 @@ struct FlightBoardInformation: View {
     @Binding var showModel : Bool
     @State var rebookAlert : Bool = false
     @State private var checkInFlight : ChekInInfo?
+    @State private var shownFlightHistory = false
     
     var body: some View {
         VStack(alignment : .leading) {
             HStack {
                 Text("\(flight.airline) Flight \(flight.number)")
                     .font(.largeTitle).lineLimit(2)
+                Button("On-Time History") {
+                    self.shownFlightHistory.toggle()
+                }.popover(isPresented: $shownFlightHistory, arrowEdge: .top) {
+                    FlightTimeHistory(flight: self.flight)
+                }
                 Spacer()
                 Button("Done" , action : {self.showModel.toggle()})
 

@@ -53,7 +53,10 @@ struct ContentView: View {
       .font(.title).padding(20)
        Spacer()
     }
+    .navigationViewStyle(StackNavigationViewStyle())
+
     .navigationBarTitle(Text("Mountain Airport"))
+      
   }
     
   }
